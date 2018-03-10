@@ -1,6 +1,6 @@
 //@ts-check
-import {database} from '../firebase/firebase';
-const addNote = (note) => ({type: 'ADD_NOTE', note});
+import { database } from "../firebase/firebase";
+const addNote = (note) => ({ type: "ADD_NOTE", note });
 /**
  *
  *
@@ -8,23 +8,22 @@ const addNote = (note) => ({type: 'ADD_NOTE', note});
  * @returns
  */
 const start__addNote = (note = {}) => {
-  return dispatch => {
+  return (dispatch, getState) => {
     console.log("Start ADD_NOTE...");
-    database
-      .ref('notes')
-      .push({
-        ...note
-      });
-    let id = '';
-    database
-      .ref('notes')
-      .on('child_added', snapShot => {
-        id = snapShot.key;
-      });
-    dispatch(addNote({
-      ...note,
-      id
-    }));
+    const user = getState().auth.uid;
+    database.ref(`${user}/notes`).push({
+      ...note
+    });
+    let id = "";
+    database.ref(`${user}/notes`).on("child_added", (snapShot) => {
+      id = snapShot.key;
+    });
+    dispatch(
+      addNote({
+        ...note,
+        id
+      })
+    );
   };
 };
 
@@ -33,7 +32,7 @@ const start__addNote = (note = {}) => {
  *
  * @param {string} id
  */
-const removeNote = (id) => ({type: 'REMOVE_NOTE', id});
+const removeNote = (id) => ({ type: "REMOVE_NOTE", id });
 /**
  *
  *
@@ -41,16 +40,17 @@ const removeNote = (id) => ({type: 'REMOVE_NOTE', id});
  * @returns
  */
 const start__removeNote = (id) => {
-  return dispatch => {
+  return (dispatch, getState) => {
     console.log("Start REMOVE_NOTE...");
+    const user = getState().auth.uid;
     database
-      .ref(`notes/${id}`)
+      .ref(`${user}/notes/${id}`)
       .remove()
       .then(() => {
         dispatch(removeNote(id));
         console.log("Note Removed...");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error Deleting Note : ", error);
       });
   };
@@ -61,7 +61,7 @@ const start__removeNote = (id) => {
  *
  * @param {any} updatedNote
  */
-const editNote = (updatedNote) => ({type: 'EDIT_NOTE', updatedNote});
+const editNote = (updatedNote) => ({ type: "EDIT_NOTE", updatedNote });
 /**
  *
  *
@@ -69,24 +69,23 @@ const editNote = (updatedNote) => ({type: 'EDIT_NOTE', updatedNote});
  * @returns
  */
 const start__editNote = (updatedNote) => {
-  return dispatch => {
+  return (dispatch, getState) => {
     console.log("Start EDIT_NOTE");
-    database
-      .ref(`notes/${updatedNote.id}`)
-      .update({
-        ...updatedNote
-      });
+    const user = getState().auth.uid;
+    database.ref(`${user}/notes/${updatedNote.id}`).update({
+      ...updatedNote
+    });
 
     dispatch(editNote(updatedNote));
   };
-}
+};
 
 /**
  *
  *
  * @param {any} notes
  */
-const getNotes = (notes) => ({type: 'GET_NOTES', notes});
+const getNotes = (notes) => ({ type: "GET_NOTES", notes });
 /**
  *
  *
@@ -94,7 +93,7 @@ const getNotes = (notes) => ({type: 'GET_NOTES', notes});
  * @returns
  */
 const start__getNotes = (notes) => {
-  return dispatch => {
+  return (dispatch) => {
     console.log("Start GET_NOTES...");
     dispatch(getNotes(notes));
   };

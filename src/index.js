@@ -39,9 +39,8 @@ registerServiceWorker();
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    console.log("Logged In");
     store.dispatch(login(user.uid));
-    database.ref("notes").once("value", (snapShot) => {
+    database.ref(`${user.uid}/notes`).once("value", (snapShot) => {
       const notes = [];
       snapShot.forEach((childSnapshot) => {
         notes.push({
@@ -53,7 +52,6 @@ firebase.auth().onAuthStateChanged((user) => {
       renderedApp();
     });
   } else {
-    console.log("Logged Out");
     store.dispatch(logout());
     renderedApp();
   }
