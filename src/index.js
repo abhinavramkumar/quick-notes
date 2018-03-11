@@ -54,9 +54,14 @@ const ComposedApp = (props) => (
  */
 const RenderedApp = () => render(<ComposedApp />, appRoot);
 
+// $FlowFixMe
 registerServiceWorker();
 
-firebase.auth().onAuthStateChanged((user) => {
+type User = {
+  uid: string
+};
+
+firebase.auth().onAuthStateChanged((user: User) => {
   /** Check if user is logged in ie the auth state */
   if (user) {
     /** Dispatch login action to redux when user is logged in */

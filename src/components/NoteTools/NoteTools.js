@@ -18,7 +18,6 @@ class NoteTools extends Component {
     /**
      * When options button is clicked toggle options dropdown
      */
-    console.log("Clicking Options");
     this.props.options();
   };
 
