@@ -30,7 +30,6 @@
     "sass": "sass --watch ./src/styles/index.scss:./src/styles/index.css"
   },
   "devDependencies": {
-    "flow-bin": "^0.63.1",
     "jsdoc": "^3.5.5",
     "react-docgen": "^2.20.0"
   }

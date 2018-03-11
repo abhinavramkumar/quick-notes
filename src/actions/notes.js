@@ -1,6 +1,13 @@
 //@ts-check
 import { database } from "../firebase/firebase";
+
+/**
+ *
+ *
+ * @param {any} [note={}]
+ */
 const addNote = (note) => ({ type: "ADD_NOTE", note });
+
 /**
  *
  *
@@ -33,6 +40,7 @@ const start__addNote = (note = {}) => {
  * @param {string} id
  */
 const removeNote = (id) => ({ type: "REMOVE_NOTE", id });
+
 /**
  *
  *
@@ -59,16 +67,17 @@ const start__removeNote = (id) => {
 /**
  *
  *
- * @param {any} updatedNote
+ * @param {any} [updatedNote={}]
  */
 const editNote = (updatedNote) => ({ type: "EDIT_NOTE", updatedNote });
+
 /**
  *
  *
- * @param {any} updatedNote
+ * @param {any} [updatedNote={}]
  * @returns
  */
-const start__editNote = (updatedNote) => {
+const start__editNote = (updatedNote = {}) => {
   return (dispatch, getState) => {
     console.log("Start EDIT_NOTE");
     const user = getState().auth.uid;
@@ -83,16 +92,17 @@ const start__editNote = (updatedNote) => {
 /**
  *
  *
- * @param {any} notes
+ * @param {any} [notes=[]]
  */
 const getNotes = (notes) => ({ type: "GET_NOTES", notes });
+
 /**
  *
  *
- * @param {any} notes
+ * @param {any} [notes=[]]
  * @returns
  */
-const start__getNotes = (notes) => {
+const start__getNotes = (notes = []) => {
   return (dispatch) => {
     console.log("Start GET_NOTES...");
     dispatch(getNotes(notes));

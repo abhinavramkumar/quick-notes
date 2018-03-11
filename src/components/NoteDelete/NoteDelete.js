@@ -2,6 +2,13 @@ import React from "react";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import { faTimes, faCheck } from "@fortawesome/fontawesome-free-solid";
 
+/**
+ * Note Delete Component
+ * shows Delete Dialog
+ *
+ * @param {any} props
+ * @returns
+ */
 const NoteDelete = (props) => {
   return (
     <div className="Note__delete-dialog">

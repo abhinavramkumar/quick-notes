@@ -1,43 +1,33 @@
-import React, {Component} from 'react';
-import '../../../node_modules/react-quill/dist/quill.snow.css';
-import ReactQuill from 'react-quill';
-import {NoteColor} from '../index';
+import React, { Component } from "react";
+import "../../../node_modules/react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+import { NoteColor } from "../index";
 
+/**
+ * NoteForm component
+ * Render Note Form either with props when in edit mode or else as an empty form
+ *
+ * @class NoteForm
+ * @extends {Component}
+ */
 class NoteForm extends Component {
   state = {
-    id: this.props.id
-      ? this.props.id
-      : '',
-    title: this.props.title
-      ? this.props.title
-      : '',
-    description: this.props.description
-      ? this.props.description
-      : '',
-    noteColorDark: this.props.noteColorDark
-      ? this.props.noteColorDark
-      : '',
-    noteColorLight: this.props.noteColorLight
-      ? this.props.noteColorLight
-      : '',
-    tags: this.props.tags
-      ? (this.props.tags).join(",")
-      : ''
-  }
-  onFormSubmit = e => {
+    id: this.props.id ? this.props.id : "",
+    title: this.props.title ? this.props.title : "",
+    description: this.props.description ? this.props.description : "",
+    noteColorDark: this.props.noteColorDark ? this.props.noteColorDark : "",
+    noteColorLight: this.props.noteColorLight ? this.props.noteColorLight : "",
+    tags: this.props.tags ? this.props.tags.join(",") : ""
+  };
+
+  /** Called when new note is saved */
+  onFormSubmit = (e) => {
     e.preventDefault();
 
-    const inputs = Array.from(e.target.querySelectorAll('input'));
-    const title = inputs[0].value || 'No Title';
-    const tags = inputs[1].value.length > 0
-      ? inputs[1]
-        .value
-        .split(",")
-      : [];
-    const description = e
-      .target
-      .querySelector('.ql-editor')
-      .innerHTML;
+    const inputs = Array.from(e.target.querySelectorAll("input"));
+    const title = inputs[0].value || "No Title";
+    const tags = inputs[1].value.length > 0 ? inputs[1].value.split(",") : [];
+    const description = e.target.querySelector(".ql-editor").innerHTML;
 
     let note = {
       title,
@@ -47,28 +37,26 @@ class NoteForm extends Component {
       noteColorLight: this.state.noteColorLight
     };
 
-    this
-      .props
-      .onFormSubmit(note);
+    this.props.onFormSubmit(note);
   };
 
-  onTitleChange = e => {
+  onTitleChange = (e) => {
     let title = e.target.value;
-    this.setState(prevState => ({title}));
+    this.setState((prevState) => ({ title }));
   };
 
-  onDescriptionChange = value => {
+  onDescriptionChange = (value) => {
     let description = value;
-    this.setState(prevState => ({description}));
+    this.setState((prevState) => ({ description }));
   };
 
-  onTagsChange = e => {
+  onTagsChange = (e) => {
     let tags = e.target.value;
-    this.setState(prevState => ({tags}));
+    this.setState((prevState) => ({ tags }));
   };
 
   onColorChange = (noteColorLight, noteColorDark) => {
-    this.setState(prevState => ({noteColorDark, noteColorLight}));
+    this.setState((prevState) => ({ noteColorDark, noteColorLight }));
   };
 
   render() {
@@ -76,21 +64,22 @@ class NoteForm extends Component {
       <div
         className="NoteForm"
         style={{
-        backgroundColor: this.state.noteColorLight
-      }}>
+          backgroundColor: this.state.noteColorLight
+        }}
+      >
         <form onSubmit={this.onFormSubmit}>
-
           {/* Form Title */}
           <div className="form-group">
             <input
               className="form-input NoteForm__title"
               type="text"
               style={{
-              backgroundColor: this.props.color
-            }}
+                backgroundColor: this.props.color
+              }}
               value={this.state.title}
               onChange={this.onTitleChange}
-              placeholder="Title..."/>
+              placeholder="Title..."
+            />
           </div>
 
           {/* Form Tags */}
@@ -99,11 +88,12 @@ class NoteForm extends Component {
               className="form-input NoteForm__tags"
               type="text"
               style={{
-              backgroundColor: this.props.color
-            }}
+                backgroundColor: this.props.color
+              }}
               value={this.state.tags}
               onChange={this.onTagsChange}
-              placeholder="Add Tags separated by ','"/>
+              placeholder="Add Tags separated by ','"
+            />
           </div>
 
           {/* Form Description */}
@@ -111,16 +101,18 @@ class NoteForm extends Component {
             <ReactQuill
               value={this.state.description && this.state.description}
               onChange={this.onDescriptionChange}
-              placeholder="Enter Description..."></ReactQuill>
+              placeholder="Enter Description..."
+            />
           </div>
 
           {/* Form Submit Button */}
           <div className="form-group">
-            <button className="form-input NoteForm__submit" type="submit">Save</button>
+            <button className="form-input NoteForm__submit" type="submit">
+              Save
+            </button>
           </div>
-
         </form>
-        <NoteColor color={this.onColorChange}></NoteColor>
+        <NoteColor color={this.onColorChange} />
       </div>
     );
   }
