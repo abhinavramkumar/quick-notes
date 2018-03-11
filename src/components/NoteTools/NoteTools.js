@@ -3,7 +3,8 @@ import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import {
   faPencilAlt,
   faExpand,
-  faEllipsisV
+  faEllipsisV,
+  faTrashAlt
 } from "@fortawesome/fontawesome-free-solid";
 
 /**

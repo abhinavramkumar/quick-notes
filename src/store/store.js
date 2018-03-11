@@ -1,3 +1,4 @@
+// @flow
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { notesReducer, filtersReducer, authReducer } from "../reducers";
 import thunk from "redux-thunk";

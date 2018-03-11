@@ -1,43 +1,25 @@
+// @flow
 import { firebase, googleAuthProvider } from "../firebase/firebase";
 
-/**
- * Login to firebase with GoogleAuthProvider using Pop-up to sign up
- *
- * @returns firebase.auth().signInWithPopup(googleAuthProvider)
- */
-const start__Login = () => {
-  return (dispatch) => {
-    return firebase.auth().signInWithPopup(googleAuthProvider);
-  };
-};
+type Action = { type: string, uid: string } | { type: string };
 
-/**
- * Login action generator
- *
- * @return action object
- * @param {string} [uid=""]
- */
-const login = (uid = "") => ({
+const login = (uid: string = ""): Action => ({
   type: "LOGIN",
   uid
 });
 
-/**
- * Logout Action Generator
- *
- * @return action object
- */
-const logout = () => ({
+const logout = (): Action => ({
   type: "LOGOUT"
 });
 
-/**
- * Logout from firebase
- *
- * @returns firebase.auth().signOut()
- */
+const start__Login = () => {
+  return (dispatch: Dispatch): Promise<any> => {
+    return firebase.auth().signInWithPopup(googleAuthProvider);
+  };
+};
+
 const start__Logout = () => {
-  return (dispatch) => {
+  return (dispatch: Dispatch): Promise<any> => {
     return firebase.auth().signOut();
   };
 };

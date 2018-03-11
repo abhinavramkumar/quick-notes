@@ -1,4 +1,5 @@
-import * as firebase from 'firebase';
+// @flow
+import * as firebase from "firebase";
 
 const config = {
   apiKey: "AIzaSyAGWC7RhHJXf4NYaMHRsMUdC-pfJv6iqEU",
@@ -12,8 +13,6 @@ const config = {
 firebase.initializeApp(config);
 
 const database = firebase.database();
-const googleAuthProvider = new firebase
-  .auth
-  .GoogleAuthProvider();
+const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
-export {firebase, database, googleAuthProvider};
+export { firebase, database, googleAuthProvider };

@@ -9,18 +9,10 @@
 
 import React from "react";
 import { render } from "react-dom";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { database, firebase } from "./firebase/firebase";
-import {
-  Loader,
-  Homepage,
-  Header,
-  Dashboard,
-  NotePage,
-  LoginPage,
-  PageNotFound
-} from "./components";
+
+import { Loader } from "./components";
 import AppRouter from "./routers/AppRouter";
 import { start__getNotes, login, logout } from "./actions";
 import configureStore from "./store/store";
@@ -34,60 +26,52 @@ const store = configureStore();
 
 const appRoot = document.getElementById("root");
 
-render(<Loader />, appRoot);
+let RenderedApp, ComposedApp;
 
-/**
- * ComposedApp component
- *
- * @param {any} props
- */
-const ComposedApp = (props) => (
-  <Provider store={store}>
-    <AppRouter />
-  </Provider>
-);
+if (appRoot) {
+  render(<Loader />, appRoot);
+  ComposedApp = (props) => (
+    <Provider store={store}>
+      <AppRouter />
+    </Provider>
+  );
+  RenderedApp = () => render(<ComposedApp />, appRoot);
+}
 
-/**
- * RenderedApp
- *
- * @return render(<ComposedApp />, appRoot)
- */
-const RenderedApp = () => render(<ComposedApp />, appRoot);
-
-// $FlowFixMe
 registerServiceWorker();
 
-type User = {
-  uid: string
-};
+if (firebase.User) {
+  firebase.auth().onAuthStateChanged((user: firebase.User) => {
+    /** Check if user is logged in ie the auth state */
+    if (user) {
+      let uid: string = user.uid;
 
-firebase.auth().onAuthStateChanged((user: User) => {
-  /** Check if user is logged in ie the auth state */
-  if (user) {
-    /** Dispatch login action to redux when user is logged in */
-    store.dispatch(login(user.uid));
+      /** Dispatch login action to redux when user is logged in */
+      store.dispatch(login(uid));
 
-    /** Retrieve Data from firebase before rendering app */
-    database.ref(`${user.uid}/notes`).once("value", (snapShot) => {
-      const notes = [];
-      snapShot.forEach((childSnapshot) => {
-        notes.push({
-          ...childSnapshot.val(),
-          id: childSnapshot.key
+      /** Retrieve Data from firebase before rendering app */
+      database.ref(`${uid}/notes`).once("value", (snapShot) => {
+        const notes = [];
+        snapShot.forEach((childSnapshot) => {
+          notes.push({
+            ...childSnapshot.val(),
+            id: childSnapshot.key
+          });
+          return true;
         });
-      });
 
-      /** Dispatch retreived notes to redux */
-      store.dispatch(start__getNotes(notes));
+        /** Dispatch retreived notes to redux */
+        store.dispatch(start__getNotes(notes));
+
+        /** Render App */
+        RenderedApp();
+      });
+    } else {
+      /** On Logout dispatch logout action to redux */
+      store.dispatch(logout());
 
       /** Render App */
       RenderedApp();
-    });
-  } else {
-    /** On Logout dispatch logout action to redux */
-    store.dispatch(logout());
-
-    /** Render App */
-    RenderedApp();
-  }
-});
+    }
+  });
+}
